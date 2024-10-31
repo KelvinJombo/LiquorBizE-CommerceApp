@@ -10,6 +10,17 @@ services:
         - "5432:5432"
     volumes:
       - postgres_catalogue:/var/lib/postgresql/data/
+  cartdb:
+    container_name: cartDb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=CartDb
+    restart: always
+    ports:
+        - "5433:5432"
+    volumes:
+      - postgres_cart:/var/lib/postgresql/data/
   catalogueapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

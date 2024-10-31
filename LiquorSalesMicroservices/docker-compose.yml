@@ -2,6 +2,9 @@ services:
   cataloguedb:
     image: postgres
 
+  cartdb:
+    image: postgres
+
   catalogueapi:
     image: ${DOCKER_REGISTRY-}catalogueapi
     build:
@@ -10,4 +13,5 @@ services:
 
 volumes:
   postgres_catalogue:
+  postgres_cart:
 
