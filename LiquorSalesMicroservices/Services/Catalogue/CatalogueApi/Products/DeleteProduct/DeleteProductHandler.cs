@@ -15,10 +15,19 @@ namespace CatalogueApi.Products.DeleteProduct
         {
             public async Task<DeleteProductResult> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
             {
-                
-                session.Delete<Product>(command.Id);
-                await session.SaveChangesAsync();
+                var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
+                if (product == null)
+                {
+                    throw new ProductNotFoundException(command.Id);
+                }
+
+                session.Delete(product);
+                await session.SaveChangesAsync(cancellationToken);
                 return new DeleteProductResult(true);
+
+                //session.Delete<Product>(command.Id);
+                //await session.SaveChangesAsync();
+                //return new DeleteProductResult(true);
             }
         }
     }

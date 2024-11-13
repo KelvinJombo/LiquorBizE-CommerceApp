@@ -12,20 +12,19 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Services/Cart/Cart.Api/Cart.Api.csproj", "Services/Cart/Cart.Api/"]
-COPY ["BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj", "BuildingBlocks/BuildingBlocks/"]
-RUN dotnet restore "./Services/Cart/Cart.Api/Cart.Api.csproj"
+COPY ["Services/Discounts/Discount.Grpc/Discount.Grpc.csproj", "Services/Discounts/Discount.Grpc/"]
+RUN dotnet restore "./Services/Discounts/Discount.Grpc/Discount.Grpc.csproj"
 COPY . .
-WORKDIR "/src/Services/Cart/Cart.Api"
-RUN dotnet build "./Cart.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Services/Discounts/Discount.Grpc"
+RUN dotnet build "./Discount.Grpc.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Cart.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Discount.Grpc.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Cart.Api.dll"]
+ENTRYPOINT ["dotnet", "Discount.Grpc.dll"]

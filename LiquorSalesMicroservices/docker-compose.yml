@@ -5,13 +5,23 @@ services:
   cartdb:
     image: postgres
 
+  distributedcache:
+    image: redis
+
   catalogueapi:
     image: ${DOCKER_REGISTRY-}catalogueapi
     build:
       context: .
       dockerfile: Services/Catalogue/CatalogueApi/Dockerfile
 
+  cart.api:
+    image: ${DOCKER_REGISTRY-}cartapi
+    build:
+      context: .
+      dockerfile: Services/Cart/Cart.Api/Dockerfile
+
 volumes:
   postgres_catalogue:
   postgres_cart:
+
 

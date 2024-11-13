@@ -17,9 +17,16 @@
         }
         public async Task<bool> DeleteCart(string userName, CancellationToken cancellationToken = default)
         {
-            session.Delete<ShoppingCarts>(userName);
+            var cart = await session.LoadAsync<ShoppingCarts>(userName, cancellationToken);
+            if (cart == null)
+            {
+                throw new CartNotFoundException(userName);
+            }
+
+            session.Delete(cart);
             await session.SaveChangesAsync(cancellationToken);
             return true;
         }
+
     }
 }
