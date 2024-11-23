@@ -19,7 +19,7 @@ namespace BuildingBlocks.Behaviours
             if(timeTaken.Seconds > 3)
                 logger.LogWarning("[PERFORMANCE] The Request {Request} took {TimeTaken} seconds", typeof(TRequest).Name, timeTaken.Seconds);
 
-            logger.LogInformation("[END] Handle {Request} with {Response}", typeof(TRequest).Name, typeof(TResponse).Name);
+            logger.LogInformation("[END] Handled {Request} with {Response}", typeof(TRequest).Name, typeof(TResponse).Name);
 
             return response;
         }

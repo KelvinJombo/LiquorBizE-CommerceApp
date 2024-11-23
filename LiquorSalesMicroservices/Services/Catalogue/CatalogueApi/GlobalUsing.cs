@@ -12,3 +12,8 @@ global using BuildingBlocks.Exceptions.Handler;
 global using CatalogueApi.Data;
 global using Marten.Schema;
 global using Marten.Pagination;
+global using HealthChecks.UI.Client;
+global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+global using Microsoft.AspNetCore.Mvc;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting.Server;
-
-namespace CatalogueApi.Products.CreateProduct
+﻿namespace CatalogueApi.Products.CreateProduct
 {
-    public record CreateProductRequest(string Name, List<string> Category, string Description, int Quantity, string ImageFile, decimal Price);
+    public record CreateProductRequest(string Name, string CompanyName, List<string> Category, string Description, int StockingQuantity, string ImageFile, decimal CostPrice, decimal SellingPrice, DateOnly ExpiryDate);
     public record CreateProductResponse(Guid Id);
     public class CreateProductEndPoint : ICarterModule
     {

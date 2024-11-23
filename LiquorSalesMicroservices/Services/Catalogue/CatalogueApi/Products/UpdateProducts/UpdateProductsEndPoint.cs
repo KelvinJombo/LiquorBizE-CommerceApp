@@ -1,7 +1,7 @@
 ﻿
 namespace CatalogueApi.Products.UpdateProducts
 {
-    public record UpdateProductRequest(Guid Id, string Name, List<string> Category, int Quantity, string Description, string ImageFile, decimal Price);
+    public record UpdateProductRequest(Guid Id, string Name, string CompanyName, List<string> Category, int StockingQuantity, string Description, string ImageFile, decimal CostPrice, decimal SellingPrice, DateOnly ExpiryDate);
 
     public record UpdateProductResponse(bool IsSuccess);
     public class UpdateProductsEndPoint : ICarterModule

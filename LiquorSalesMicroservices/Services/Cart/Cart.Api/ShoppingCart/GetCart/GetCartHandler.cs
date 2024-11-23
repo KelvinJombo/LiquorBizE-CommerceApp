@@ -1,6 +1,4 @@
-﻿using Cart.Api.Data;
-
-namespace Cart.Api.ShoppingCart.GetCart
+﻿namespace Cart.Api.ShoppingCart.GetCart
 {
     public record GetCartQuery(string UserName) : IQuery<GetCartResult>;
 

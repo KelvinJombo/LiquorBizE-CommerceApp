@@ -7,9 +7,10 @@ services:
       - POSTGRES_DB=CatalogueDb
     restart: always
     ports:
-        - "5432:5432"
+      - "5432:5432"
     volumes:
       - postgres_catalogue:/var/lib/postgresql/data/
+
   cartdb:
     container_name: cartDb
     environment:
@@ -18,15 +19,15 @@ services:
       - POSTGRES_DB=CartDb
     restart: always
     ports:
-        - "5434:5432"
+      - "5433:5432"
     volumes:
       - postgres_cart:/var/lib/postgresql/data/
 
   distributedcache:
-     container_name: distributedcache
-     restart: always
-     ports:
-       - "6379:6379"
+    container_name: distributedcache
+    restart: always
+    ports:
+      - "6379:6379"
 
   catalogueapi:
     environment:
@@ -48,14 +49,38 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectioStrings__Database=Server=cartdb;Port=5433;Database=CartDb;User Id=postgres;Password=postgres;Include Error Detail=true",
-      - ConectingStrings__Redis=distributedcache:6379"
+      - ConnectionStrings__Database=Server=cartdb;Port=5432;Database=CartDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - ConnectionStrings__Redis=distributedcache:6379
+      - GrpcSettings__DiscountUrl=http://discount.grpc:6002
     depends_on:
       - cartdb
       - distributedcache
+      - discount.grpc
     ports:
       - "6001:8080"
       - "6061:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  discount.grpc:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Data Source=discountdb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "6002:8080"
+      - "6062:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+volumes:
+  postgres_catalogue:
+  postgres_cart:

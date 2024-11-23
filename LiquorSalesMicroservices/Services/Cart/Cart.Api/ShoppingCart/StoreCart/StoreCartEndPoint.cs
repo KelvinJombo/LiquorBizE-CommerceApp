@@ -13,7 +13,7 @@ namespace Cart.Api.ShoppingCart.StoreCart
 
                 var result = await sender.Send(command);
 
-                var response = result.Adapt<StoreCartResult>();
+                var response = result.Adapt<StoreCartResponse>();
 
                 return Results.Created($"/cart/{response.UserName}", response);
             })
