@@ -14,8 +14,11 @@ namespace Discount.Grpc.Data
         {
             //base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Coupon>().HasData(
-                new Coupon { Id = 1, ProductName = "Fanta", Description = "50cl Plastic", Amount = 250 },
-                new Coupon { Id = 2, ProductName = "Sprite", Description = "60cl Plastic", Amount = 350 }
+                new Coupon { Id = 1, ProductName = "Fanta", Description = "Xmas Bonus", Amount = 750 },
+                new Coupon { Id = 2, ProductName = "Sprite", Description = "Xmas Bonus", Amount = 750 },
+                new Coupon { Id = 3, ProductName = "NutriYo", Description = "Xmas Bonus", Amount = 750 },
+                new Coupon { Id = 4, ProductName = "Gulder Lager Beer", Description = "Xmas Bonus", Amount = 1500 },
+                new Coupon { Id = 5, ProductName = "Star Lager Beer", Description = "Xmas Bonus", Amount = 1500 }
             );
         }
 

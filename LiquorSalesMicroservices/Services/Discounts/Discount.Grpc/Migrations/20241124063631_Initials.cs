@@ -32,8 +32,11 @@ namespace Discount.Grpc.Migrations
                 columns: new[] { "Id", "Amount", "Description", "ProductName" },
                 values: new object[,]
                 {
-                    { 1, 250, "50cl Plastic", "Fanta" },
-                    { 2, 350, "60cl Plastic", "Sprite" }
+                    { 1, 750, "Xmas Bonus", "Fanta" },
+                    { 2, 750, "Xmas Bonus", "Sprite" },
+                    { 3, 750, "Xmas Bonus", "NutriYo" },
+                    { 4, 1500, "Xmas Bonus", "Gulder Lager Beer" },
+                    { 5, 1500, "Xmas Bonus", "Star Lager Beer" }
                 });
         }
 

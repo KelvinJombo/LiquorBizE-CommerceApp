@@ -41,16 +41,37 @@ namespace Discount.Grpc.Migrations
                         new
                         {
                             Id = 1,
-                            Amount = 250,
-                            Description = "50cl Plastic",
+                            Amount = 750,
+                            Description = "Xmas Bonus",
                             ProductName = "Fanta"
                         },
                         new
                         {
                             Id = 2,
-                            Amount = 350,
-                            Description = "60cl Plastic",
+                            Amount = 750,
+                            Description = "Xmas Bonus",
                             ProductName = "Sprite"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Amount = 750,
+                            Description = "Xmas Bonus",
+                            ProductName = "NutriYo"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Amount = 1500,
+                            Description = "Xmas Bonus",
+                            ProductName = "Gulder Lager Beer"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Amount = 1500,
+                            Description = "Xmas Bonus",
+                            ProductName = "Star Lager Beer"
                         });
                 });
 #pragma warning restore 612, 618

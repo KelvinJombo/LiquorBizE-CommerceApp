@@ -51,7 +51,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=cartdb;Port=5432;Database=CartDb;User Id=postgres;Password=postgres;Include Error Detail=true
       - ConnectionStrings__Redis=distributedcache:6379
-      - GrpcSettings__DiscountUrl=http://discount.grpc:6002
+      - GrpcSettings__DiscountUrl=http://discount.grpc:8080
     depends_on:
       - cartdb
       - distributedcache
@@ -68,18 +68,20 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Data Source=discountdb
+      - ConnectionStrings__Database=Data Source=/app/db/discountdb
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      test: ["CMD", "grpcurl", "-plaintext", "localhost:8080", "grpc.health.v1.Health/Check"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
     ports:
       - "6002:8080"
       - "6062:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - C:/Users/HP/OneDrive/Desktop/Code_Projects/DanHeroApplication/LiquorSalesMicroservices/Services/Discounts/Discount.Grpc:/app/db
 
 volumes:
   postgres_catalogue:
