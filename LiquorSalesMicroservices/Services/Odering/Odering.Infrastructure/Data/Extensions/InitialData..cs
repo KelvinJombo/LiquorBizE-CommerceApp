@@ -1,7 +1,7 @@
 ﻿namespace Odering.Infrastructure.Data.Extensions
 {
     public class InitialData
-    {
+    { 
         public static IEnumerable<Customer> Customers =>
 
             new List<Customer>

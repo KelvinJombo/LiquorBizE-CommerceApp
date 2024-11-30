@@ -17,7 +17,7 @@ namespace Odering.Infrastructure.Data.Extensions
             await SeedAsync(context);
 
             
-        }
+        } 
 
 
         private static async Task SeedAsync(AppDbContext context)
