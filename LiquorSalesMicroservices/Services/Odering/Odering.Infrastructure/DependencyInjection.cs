@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Odering.Infrastructure.Data.Interceptors;
 
 namespace Odering.Infrastructure
 {
@@ -10,7 +11,11 @@ namespace Odering.Infrastructure
             var connectionString = configuration.GetConnectionString("Database");
 
             services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(connectionString));
+            {
+                options.AddInterceptors(new AuditableEntityInterceptor());
+                options.UseSqlServer(connectionString);
+            });
+           
 
             return services;
         }

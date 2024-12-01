@@ -1,7 +1,7 @@
 ﻿namespace Odering.Domain.Abstractions
 {
 
-    public interface IAggregate<T> : IAggregate, IEntityTypeConfiguration<T>
+    public interface IAggregate<T> : IAggregate, IEntity<T>
     {
     }
     public interface IAggregate : IEntity

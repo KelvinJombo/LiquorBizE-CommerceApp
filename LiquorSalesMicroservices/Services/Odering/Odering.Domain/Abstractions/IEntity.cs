@@ -1,10 +1,10 @@
 ﻿namespace Odering.Domain.Abstractions
 {
-    public interface IEntityTypeConfiguration<T> : IEntity
+    public interface IEntity<T> : IEntity
     {
         public T Id { get; set; }
     }
-    public interface IEntity
+    public interface IEntity 
     {
         public DateTime? CreatedAt { get; set; }
         public string? CreatedBy { get; set; }

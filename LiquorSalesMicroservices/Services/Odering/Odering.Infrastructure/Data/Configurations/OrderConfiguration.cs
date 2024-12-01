@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Odering.Domain.Enums;
-using Odering.Domain.Models;
-using Odering.Domain.ValueObjects;
 
 namespace Odering.Infrastructure.Data.Configurations
 {

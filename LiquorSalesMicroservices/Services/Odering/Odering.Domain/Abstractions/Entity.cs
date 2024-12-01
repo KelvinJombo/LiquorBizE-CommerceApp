@@ -1,6 +1,6 @@
 ﻿namespace Odering.Domain.Abstractions
 {
-    public abstract class Entity<T> : IEntityTypeConfiguration<T>
+    public abstract class Entity<T> : IEntity<T>
     {
         public T Id { get; set; }
         public DateTime? CreatedAt { get; set; }
