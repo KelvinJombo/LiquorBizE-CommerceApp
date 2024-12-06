@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Odering.Application.Data;
 using Odering.Domain.Models;
 using System.Reflection;
 
 namespace Odering.Infrastructure.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IApplicationDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {            
@@ -15,6 +16,7 @@ namespace Odering.Infrastructure.Data
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 
+         
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

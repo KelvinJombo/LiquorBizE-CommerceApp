@@ -1,18 +1,20 @@
-﻿namespace Odering.Api
+﻿using Carter;
+
+namespace Odering.Api
 {
     public static class DependencyInjection
     {
         public static IServiceCollection AddApiServices(this IServiceCollection services)
         {
-
+            services.AddCarter();
             return services;
         }
 
 
-        public static WebApplication UseApiServices(this WebApplication webApp)
+        public static WebApplication UseApiServices(this WebApplication app)
         {
-
-            return webApp;
+            app.MapCarter();
+            return app;
         }
 
     }

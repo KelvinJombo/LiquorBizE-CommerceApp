@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Odering.Infrastructure.Data.Interceptors;
+using Odering.Application.Data;
 
 namespace Odering.Infrastructure
 {
@@ -10,14 +11,22 @@ namespace Odering.Infrastructure
         {
             var connectionString = configuration.GetConnectionString("Database");
 
-            services.AddDbContext<AppDbContext>(options =>
+            // Add Services to the Container
+            services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+            services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventInterceptor>();
+
+            services.AddDbContext<AppDbContext>((sp, options) =>
             {
-                options.AddInterceptors(new AuditableEntityInterceptor());
+                options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                 options.UseSqlServer(connectionString);
             });
-           
+
+            services.AddScoped<IApplicationDbContext, AppDbContext>();
 
             return services;
         }
     }
 }
+
+
+

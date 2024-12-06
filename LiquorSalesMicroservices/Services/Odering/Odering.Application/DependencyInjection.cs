@@ -1,9 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BuildingBlocks.Behaviours;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Odering.Application
 {
@@ -11,7 +8,15 @@ namespace Odering.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            return services;
+            services.AddMediatR(config =>
+            {
+                config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+                config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+                config.AddOpenBehavior(typeof (LoggingBehavior<,>));
+            });
+                 return services;
         }
+
+
     }
 }
