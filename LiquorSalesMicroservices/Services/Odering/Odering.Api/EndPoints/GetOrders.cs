@@ -5,7 +5,7 @@ namespace Odering.Api.EndPoints
 {
     //public record GetOrdersRequest(PaginationRequest PaginationRequest);
 
-    public record GetOrdersResponse(PaginatedResult<OrderDto> OrderDto);
+    public record GetOrdersResponse(PaginatedResult<OrderDto> Orders);
     public class GetOrders : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

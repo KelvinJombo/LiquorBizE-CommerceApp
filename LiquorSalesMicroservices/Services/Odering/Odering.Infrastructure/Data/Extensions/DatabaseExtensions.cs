@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Odering.Infrastructure.Data.Extensions
 {
@@ -15,7 +14,6 @@ namespace Odering.Infrastructure.Data.Extensions
             context.Database.MigrateAsync().GetAwaiter().GetResult();
 
             await SeedAsync(context);
-
             
         } 
 

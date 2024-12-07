@@ -10,7 +10,7 @@ namespace BuildingBlocks.Behaviours
         {
             logger.LogInformation("[START] Handle request={Request} - Response={Response} - RequestData={RequestData}", typeof(TRequest).Name, typeof(TResponse).Name, request);
 
-            var timer = new Stopwatch();    
+            var timer = new Stopwatch();
             timer.Start();
             var response = await next();
 
