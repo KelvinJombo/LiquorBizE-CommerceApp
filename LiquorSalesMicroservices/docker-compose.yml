@@ -10,6 +10,9 @@ services:
 
   orderdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
+  
+  messagebroker:
+    image: rabbitmq:management
 
   catalogueapi:
     image: ${DOCKER_REGISTRY-}catalogueapi
@@ -29,9 +32,17 @@ services:
       context: .
       dockerfile: Services/Discounts/Discount.Grpc/Dockerfile
 
+  odering.api:
+    image: ${DOCKER_REGISTRY-}oderingapi
+    build:
+      context: .
+      dockerfile: Services/Odering/Odering.Api/Dockerfile
+
 volumes:
   postgres_catalogue:
   postgres_cart:
+  mssql_order:
+
 
 
 

@@ -1,5 +1,4 @@
-﻿
-namespace Odering.Application.Orders.EventHandlers
+﻿namespace Odering.Application.Orders.EventHandlers.Domain
 {
     public class OrderUpdatedEventHandler(ILogger<OrderUpdatedEventHandler> logger) : INotificationHandler<OrderUpdatedEvent>
     {

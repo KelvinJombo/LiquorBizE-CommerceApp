@@ -1,3 +1,5 @@
+using BuildingBlocks.Messaging.MassTransit;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Services to the DI Container
@@ -39,6 +41,8 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
         };
         return handler;
     });
+
+builder.Services.AddMessageBroker(builder.Configuration);
 
 //Add Cross-cutting Concerns Services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
