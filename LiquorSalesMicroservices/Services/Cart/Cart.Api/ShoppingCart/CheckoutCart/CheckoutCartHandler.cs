@@ -21,6 +21,12 @@ namespace Cart.Api.ShoppingCart.CheckoutCart
     {
         public async Task<CheckoutCartResult> Handle(CheckoutCartCommand command, CancellationToken cancellationToken)
         {
+            if (command.CartCheckoutDto == null || string.IsNullOrEmpty(command.CartCheckoutDto.UserName))
+            {
+                throw new ArgumentNullException(nameof(command.CartCheckoutDto), "CartCheckoutDto or UserName is null.");
+            }
+
+
             var cart = await repository.GetCart(command.CartCheckoutDto.UserName, cancellationToken);
             if (cart == null)
             {

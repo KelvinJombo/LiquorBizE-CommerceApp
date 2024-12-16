@@ -1,7 +1,7 @@
 ﻿namespace Cart.Api.Data
 {
     public class CartRepository(IDocumentSession session) : ICartRepository
-    {
+    { 
         public async Task<ShoppingCarts> GetCart(string userName, CancellationToken cancellationToken = default)
         {
              var cart = await session.LoadAsync<ShoppingCarts>(userName, cancellationToken);
