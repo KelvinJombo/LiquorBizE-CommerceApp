@@ -6,7 +6,8 @@
       "serviceActions": {
         "catalogueapi": "StartDebugging",
         "cart.api": "StartDebugging",
-        "odering.api": "StartDebugging"
+        "odering.api": "StartDebugging",
+        "yarpapigateway": "StartDebugging"
       }
     }
   }

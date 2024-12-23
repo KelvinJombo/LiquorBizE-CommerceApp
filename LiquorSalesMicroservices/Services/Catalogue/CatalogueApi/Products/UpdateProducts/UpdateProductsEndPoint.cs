@@ -16,6 +16,7 @@ namespace CatalogueApi.Products.UpdateProducts
 
                 return Results.Ok(response);
             })
+               //.RequireAuthorization("AdminUserOnly")
                .WithName("UpdateProduct")
                .Produces<UpdateProductResponse>(StatusCodes.Status200OK)
                .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -14,6 +14,7 @@
 
                 return Results.Ok(response);
             })
+               //.RequireAuthorization("AdminUserOnly")
                .WithName("DeleteCart")
                .Produces<DeleteCartResponse>(StatusCodes.Status200OK)
                .ProducesProblem(StatusCodes.Status400BadRequest)

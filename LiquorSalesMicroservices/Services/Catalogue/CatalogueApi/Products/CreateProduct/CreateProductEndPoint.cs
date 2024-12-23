@@ -16,6 +16,7 @@
 
                 return Results.Created($"/products/{response.Id}", response);
             })
+                //.RequireAuthorization("AdminUserOnly")
                 .WithName("CreateProduct")
                 .Produces<CreateProductResponse>(StatusCodes.Status201Created)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

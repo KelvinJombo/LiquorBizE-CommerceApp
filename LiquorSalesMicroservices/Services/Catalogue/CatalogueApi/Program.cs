@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Services to the ASP.Net Built-in DI Container
+
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
@@ -68,10 +71,9 @@ app.UseExceptionHandler(options => { });
 //    });
 
 //});
+
 app.Run();
-
-
-
+ 
 
 public class DateOnlyJsonConverter : JsonConverter<DateOnly>
 {
