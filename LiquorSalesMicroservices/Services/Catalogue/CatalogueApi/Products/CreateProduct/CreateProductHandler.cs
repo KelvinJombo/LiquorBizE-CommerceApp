@@ -1,6 +1,6 @@
 ﻿namespace CatalogueApi.Products.CreateProduct
 {
-    public record CreateProductCommand(string Name, string CompanyName, List<string> Category, string Description, int StockingQuantity, string ImageFile, decimal CostPrice, decimal SellingPrice, DateOnly ExpiryDate)
+    public record CreateProductCommand(string Name, string CompanyName, string Size, List<string> Category, string Description, int StockingQuantity, string ImageFile, decimal CostPrice, decimal SellingPrice, DateOnly ExpiryDate)
         : ICommand<CreateProductResult>;
     public record CreateProductResult(Guid Id);
 
@@ -10,6 +10,7 @@
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name is Required").Length(2, 50).WithMessage("Name characters must fall between 2 and 50");
             RuleFor(x => x.CompanyName).NotEmpty().WithMessage("CompanyName is Required").Length(2, 100).WithMessage("Name characters must fall between 2 and 100");
+            RuleFor(x => x.Size).NotEmpty().WithMessage("Product Size Must Be Provided");
             RuleFor(x => x.Category).NotEmpty().WithMessage("Category is Required");
             RuleFor(x => x.StockingQuantity).GreaterThan(0).WithMessage("Quantity must be greater than 0");
             RuleFor(x => x.ImageFile).NotEmpty().WithMessage("ImageFile is Required");
@@ -28,6 +29,7 @@
             {
                 Name = command.Name,
                 CompanyName = command.CompanyName,
+                Size = command.Size,
                 Category = command.Category,
                 Description = command.Description,
                 StockingQuantity = command.StockingQuantity,

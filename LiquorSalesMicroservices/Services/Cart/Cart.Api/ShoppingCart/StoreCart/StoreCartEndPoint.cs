@@ -17,7 +17,7 @@ namespace Cart.Api.ShoppingCart.StoreCart
 
                 return Results.Created($"/cart/{response.UserName}", response);
             })
-               //.RequireAuthorization()
+               .RequireAuthorization("RegulaUserPolicy")
                .WithName("Create Cart")
                .Produces<StoreCartResponse>(StatusCodes.Status201Created)
                .ProducesProblem(StatusCodes.Status400BadRequest)

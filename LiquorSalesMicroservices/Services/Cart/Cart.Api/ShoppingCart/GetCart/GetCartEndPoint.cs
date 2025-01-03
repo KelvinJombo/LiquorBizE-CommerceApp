@@ -15,7 +15,7 @@
 
                 return Results.Ok(response);
             })
-                //.RequireAuthorization("AdminUserOnly")
+                .RequireAuthorization("AdminUserPolicy")
                 .WithName("GetCart By Id")
                 .Produces<GetCartResponse>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

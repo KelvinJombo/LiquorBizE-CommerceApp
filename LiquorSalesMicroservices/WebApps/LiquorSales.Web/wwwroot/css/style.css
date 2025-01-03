@@ -11,7 +11,7 @@
 .category_block li:hover {
     background-color: #007bff;
 }
-.category_block li:hover a {
+.category_block li:hover a { 
     color: #ffffff;
 }
 .category_block li a {
@@ -57,4 +57,21 @@ footer {
 }
 footer a {
     color: #f8f9fa!important
+}
+
+.carousel-image {
+    width: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .carousel-image {
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-image {
+        max-height: 200px;
+    }
 }

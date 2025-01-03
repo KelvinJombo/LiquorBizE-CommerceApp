@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YarpApiGateway", "ApiGatewa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApps", "WebApps", "{1FBB6D4B-DC95-4CDF-A8B8-3EE62F710293}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiquorSales.Web", "WebApps\LiquorSales.Web\LiquorSales.Web.csproj", "{28C2C5EA-D454-4FB1-A0BA-29AB80DD6C82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiquorSales.Web", "WebApps\LiquorSales.Web\LiquorSales.Web.csproj", "{28C2C5EA-D454-4FB1-A0BA-29AB80DD6C82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

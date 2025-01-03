@@ -19,7 +19,7 @@ namespace Odering.Api.EndPoints
 
                return Results.Ok(response);
            })
-
+                .RequireAuthorization("RegularUserPolicy")
                 .WithName("GetOrdersByCustomer")
                 .Produces<GetOrdersByCustomerResponse>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

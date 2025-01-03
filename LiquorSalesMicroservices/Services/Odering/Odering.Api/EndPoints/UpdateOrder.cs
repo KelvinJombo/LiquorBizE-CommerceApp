@@ -18,7 +18,7 @@ namespace Odering.Api.EndPoints
 
                 return Results.Ok(response);
             })
-
+                .RequireAuthorization("RegularUserPolicy")
                 .WithName("UpdateOrder")
                 .Produces<UpdateOrderResponse>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

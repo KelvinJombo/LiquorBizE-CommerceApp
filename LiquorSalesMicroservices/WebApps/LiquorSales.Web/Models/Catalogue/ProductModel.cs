@@ -8,7 +8,7 @@
         public string Name { get; set; } = default!;
         public string CompanyName { get; set; } = default!;
         public List<string> Category { get; set; } = new();
-
+        public string Size { get; set; } = default!;
         public int StockingQuantity
         {
             get => _stockingQuantity;

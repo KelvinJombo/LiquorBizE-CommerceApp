@@ -19,6 +19,20 @@ var app = builder.Build();
 
 app.UseApiServices();
 
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (UnauthorizedAccessException)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        await context.Response.WriteAsync("Unauthorized access. Please log in.");
+    }
+});
+
+
 if (app.Environment.IsDevelopment())
 {
     await app.InitialiseDatabaseAsync();

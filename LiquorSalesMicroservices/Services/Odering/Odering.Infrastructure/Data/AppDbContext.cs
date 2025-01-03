@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Odering.Application.Data;
-using Odering.Domain.Models;
+﻿using Odering.Application.Data;
 using System.Reflection;
 
 namespace Odering.Infrastructure.Data

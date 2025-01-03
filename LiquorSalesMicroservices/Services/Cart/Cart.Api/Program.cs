@@ -1,5 +1,7 @@
 using BuildingBlocks.Messaging.MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,43 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}";
+        options.Audience = builder.Configuration["Auth0:Audience"];
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"https://{builder.Configuration["Auth0:Domain"]}",
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Auth0:Audience"],
+            ValidateLifetime = true
+        };
+        options.RequireHttpsMetadata = true;
+
+    });
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RegularUserPolicy", policy =>
+        policy.RequireRole("RegularUser"));
+
+    options.AddPolicy("AdminUserPolicy", policy =>
+        policy.RequireRole("AdminUser"));
+
+    options.AddPolicy("SuperAdminPolicy", policy =>
+        policy.RequireRole("SuperAdminUser"));
+
+    options.AddPolicy("AdminOrSuperAdminPolicy", policy =>
+        policy.RequireRole("AdminUser", "SuperAdminUser"));
+    options.AddPolicy("CustomPolicy", policy =>
+        policy.RequireClaim("custom-claim", "value"));
+});
+
+
 
 // Data Services 
 
@@ -57,6 +96,21 @@ var app = builder.Build();
 //Configure Http Request Pipeline
 app.MapCarter();
 app.UseExceptionHandler(options => { });
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (UnauthorizedAccessException)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        await context.Response.WriteAsync("Unauthorized access. Please log in.");
+    }
+});
+
+
 app.UseHealthChecks("/health",
     new HealthCheckOptions
     {

@@ -1,6 +1,6 @@
 ﻿namespace CatalogueApi.Products.CreateProduct
 {
-    public record CreateProductRequest(string Name, string CompanyName, List<string> Category, string Description, int StockingQuantity, string ImageFile, decimal CostPrice, decimal SellingPrice, DateOnly ExpiryDate);
+    public record CreateProductRequest(string Name, string CompanyName, string Size, List<string> Category, string Description, int StockingQuantity, string ImageFile, decimal CostPrice, decimal SellingPrice, DateOnly ExpiryDate);
     public record CreateProductResponse(Guid Id);
     public class CreateProductEndPoint : ICarterModule
     {
