@@ -1,6 +1,8 @@
+using LiquorSales.Web.Implementations;
+
 namespace LiquorSales.Web.Pages
 {
-    public class IndexModel(ICatalogueServices catalogueServices, ICartServices cartServices, ILogger<IndexModel> logger) : PageModel
+    public class IndexModel(ICatalogueServices catalogueServices, ILoadCartServices services, ICartServices cartServices, ILogger<IndexModel> logger) : PageModel
     {
         
         public IEnumerable<ProductModel> ProductList { get; set; } = new List<ProductModel>();
@@ -41,7 +43,7 @@ namespace LiquorSales.Web.Pages
             try
             {
                 var productResponse = await catalogueServices.GetProduct(productId);
-                var cart = await cartServices.LoadUserCart();
+                var cart = await services.LoadUserCart();
 
                 cart.Items.Add(new ShoppingCartItemModel
                 {

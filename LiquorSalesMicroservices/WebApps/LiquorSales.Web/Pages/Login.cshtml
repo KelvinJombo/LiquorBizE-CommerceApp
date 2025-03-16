@@ -1,0 +1,57 @@
+﻿@page
+@model LiquorSales.Web.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login or Sign Up";
+}
+
+<h2>Login</h2>
+
+<form method="post">
+    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+
+    <div class="form-group">
+        <label>UserName</label>
+        <input type="text" class="form-control" asp-for="LoginRequest.UserName" required />
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" asp-for="LoginRequest.Email" required />
+    </div>
+
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" asp-for="LoginRequest.Password" required />
+    </div>
+
+    <button type="submit" asp-page-handler="Login" class="btn btn-primary">Login</button>
+</form>
+
+<hr />
+
+<h2>Sign Up</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" class="form-control" asp-for="SignUpRequest.UserName" required />
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" asp-for="SignUpRequest.Email" required />
+    </div>
+
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" asp-for="SignUpRequest.Password" required />
+    </div>
+
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" asp-for="SignUpRequest.ConfirmPassword" required />
+    </div>
+
+    <button type="submit" asp-page-handler="SignUp" class="btn btn-success">Sign Up</button>
+</form>
+

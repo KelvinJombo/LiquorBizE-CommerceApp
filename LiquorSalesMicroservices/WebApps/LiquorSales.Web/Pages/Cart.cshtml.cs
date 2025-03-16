@@ -1,13 +1,15 @@
+using LiquorSales.Web.Implementations;
+
 namespace LiquorSales.Web.Pages
 {
-    public class CartModel(ICartServices cartServices, ILogger<CartModel> logger) : PageModel
+    public class CartModel(ICartServices cartServices, ILoadCartServices services, ILogger<CartModel> logger) : PageModel
     {
         public ShoppingCartModel Cart {  get; set; } = new ShoppingCartModel();
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
-                Cart = await cartServices.LoadUserCart();
+                Cart = await services.LoadUserCart();
                 return Page();
             }
             catch (ApiException apiEx)
@@ -30,7 +32,7 @@ namespace LiquorSales.Web.Pages
 
             try
             {
-                Cart = await cartServices.LoadUserCart();
+                Cart = await services.LoadUserCart();
 
                 Cart.Items.RemoveAll(x => x.ProductId == productId);
 

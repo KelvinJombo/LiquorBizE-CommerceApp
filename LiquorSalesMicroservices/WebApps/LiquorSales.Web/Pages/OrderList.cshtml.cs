@@ -1,13 +1,20 @@
+using System.Security.Claims;
+
 namespace LiquorSales.Web.Pages
 {
-    public class OrderListModel(IOrderingService orderingService, ILogger<OrderListModel> logger) : PageModel
+    public class OrderListModel(IOrderingService orderingService) : PageModel
     {
         public IEnumerable<OrderModel> Orders { get; set; } = default!;
 
         public async Task<IActionResult> OnGet()
         {
-            // Assuming CustomerId is Passed in from UI for Authenticated User kel
-            var customerId = new Guid("58c49479-ec65-4de2-86e7-033c546291aa");
+            // Get the logged-in user's CustomerId from claims
+            var customerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(customerIdClaim) || !Guid.TryParse(customerIdClaim, out var customerId))
+            {
+                return Unauthorized(); // Return 401 if the user is not authenticated or CustomerId is invalid
+            }
 
             var response = await orderingService.GetOrdersByCustomer(customerId);
 
@@ -15,5 +22,6 @@ namespace LiquorSales.Web.Pages
 
             return Page();
         }
+
     }
 }

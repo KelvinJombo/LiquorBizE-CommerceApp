@@ -1,6 +1,8 @@
+using LiquorSales.Web.Implementations;
+
 namespace LiquorSales.Web.Pages.Shared
 {
-    public class ProductDetailModel(ICatalogueServices catalogueServices, ICartServices cartServices, ILogger<ProductDetailModel> logger) : PageModel
+    public class ProductDetailModel(ICatalogueServices catalogueServices, ICartServices cartServices, ILoadCartServices services, ILogger<ProductDetailModel> logger) : PageModel
     {
         public ProductModel Product { get; set; } = default!;
 
@@ -25,7 +27,7 @@ namespace LiquorSales.Web.Pages.Shared
 
             var productResponse = await catalogueServices.GetProduct(productId);
 
-            var cart = await cartServices.LoadUserCart();
+            var cart = await services.LoadUserCart();
 
             cart.Items.Add(new ShoppingCartItemModel
             {

@@ -18,7 +18,7 @@
 
                 return Results.Ok(response);
             })
-                .RequireAuthorization("RegularUserOnly")
+                //.RequireAuthorization("RegularUserOnly")
                 .WithName("CheckoutCart")
                 .Produces<CheckoutCartResponse>(StatusCodes.Status201Created)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

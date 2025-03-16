@@ -11,6 +11,9 @@ services:
   orderdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
   
+  authenticationdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
   messagebroker:
     image: rabbitmq:management
 
@@ -44,10 +47,17 @@ services:
       context: .
       dockerfile: ApiGateways/YarpApiGateway/Dockerfile
 
+  authentication.api:
+    image: ${DOCKER_REGISTRY-}authenticationapi
+    build:
+      context: .
+      dockerfile: Services/Auth_API/Authentication.API/Dockerfile
+
 volumes:
   postgres_catalogue:
   postgres_cart:
   mssql_order:
+
 
 
 

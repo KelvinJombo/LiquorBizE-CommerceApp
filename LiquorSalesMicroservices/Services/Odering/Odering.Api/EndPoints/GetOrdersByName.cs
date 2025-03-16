@@ -18,7 +18,7 @@ namespace Odering.Api.EndPoints
 
                 return Results.Ok(response);
             })
-                .RequireAuthorization("AdminUserOrSuperAdminUserPolicy")
+                //.RequireAuthorization("AdminUserOrSuperAdminUserPolicy")
                 .WithName("GetOrderByName")
                 .Produces<GetOrdersByNameResponse>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

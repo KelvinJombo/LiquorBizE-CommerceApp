@@ -40,7 +40,18 @@ services:
     volumes:
       - mssql_order:/var/opt/mssql
 
+  authenticationdb:
+   container_name: authenticationdb
+   environment:
+     - ACCEPT_EULA=Y
+     - SA_PASSWORD=SwN123456789
+   restart: always
+   ports:
+     - "1434:1433"
+   volumes:
+     - mssql_auth:/var/opt/mssql
 
+   
   messagebroker:
     container_name: messagebroker
     hostname: liquorsales-mq
@@ -144,9 +155,24 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+  authentication.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Auth_Connection=Server=authenticationdb;Database=Auth_Db;User Id=sa;Password=SwN123456789;Encrypt=False;TrustServerCertificate=True
+    depends_on:
+      - authenticationdb
+    ports:
+      - "6005:8080"
+      - "6065:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 volumes:
   postgres_catalogue:
   postgres_cart:
   mssql_order:
+  mssql_auth:
+
 
 

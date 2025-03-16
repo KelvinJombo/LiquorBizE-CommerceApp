@@ -20,7 +20,7 @@ namespace Odering.Api.EndPoints
                 return Results.Ok(response);
 
             })
-                .RequireAuthorization("AdminUserOrSuperAdminUserPolicy")
+                //.RequireAuthorization("AdminUserOrSuperAdminUserPolicy")
                 .WithName("DeleteOrder")
                 .Produces<DeleteOrderResponse>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

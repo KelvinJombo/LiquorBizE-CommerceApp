@@ -17,7 +17,20 @@
         </div>
     </div>
 </div>
+<div>
+    @if (HttpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true)
+    {
+        <p>Welcome, @HttpContextAccessor.HttpContext.User.Identity.Name</p>
+        <form method="post" action="/Logout">
+            <button type="submit">Logout</button>
+        </form>
+    }
+    else
+    {
+        <a href="/Login">Login</a>
+    }
 
+</div>
 <div class="container">
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">

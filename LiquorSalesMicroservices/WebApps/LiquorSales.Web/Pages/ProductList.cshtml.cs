@@ -1,6 +1,8 @@
+using LiquorSales.Web.Implementations;
+
 namespace LiquorSales.Web.Pages
 {
-    public class ProductListModel(ICatalogueServices catalogueServices, ICartServices cartServices, ILogger<ProductListModel> logger) : PageModel
+    public class ProductListModel(ICatalogueServices catalogueServices, ICartServices cartServices, ILoadCartServices services, ILogger<ProductListModel> logger) : PageModel
     {
         public IEnumerable<string> CategoryList { get; set; } = [];
 
@@ -36,7 +38,7 @@ namespace LiquorSales.Web.Pages
 
             var productResponse = await catalogueServices.GetProduct(productId);
 
-            var cart = await cartServices.LoadUserCart();
+            var cart = await services.LoadUserCart();
 
             cart.Items.Add(new ShoppingCartItemModel
             {

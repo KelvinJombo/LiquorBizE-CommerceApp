@@ -1,6 +1,9 @@
+using LiquorSales.Web.Implementations;
+using System.Security.Claims;
+
 namespace LiquorSales.Web.Pages
 {
-    public class CheckoutModel(ICartServices cartServices, ILogger<CheckoutModel> logger) : PageModel
+    public class CheckoutModel(ICartServices cartServices, ILoadCartServices services, ILogger<CheckoutModel> logger) : PageModel
     {
         [BindProperty]
         public CartCheckoutModel Order { get; set; } = default!;
@@ -10,7 +13,7 @@ namespace LiquorSales.Web.Pages
         {
             try
             {
-                Cart = await cartServices.LoadUserCart();
+                Cart = await services.LoadUserCart();
 
                 return Page();
             }
@@ -34,17 +37,32 @@ namespace LiquorSales.Web.Pages
 
             try
             {
-                Cart = await cartServices.LoadUserCart();
+                Cart = await services.LoadUserCart();
 
                 if (!ModelState.IsValid)
                 {
                     return Page();
                 }
 
-                // Assuming CustomerId is Passed In From The UI
+                // Get the logged-in user's details
+                var user = HttpContext.User;
+                if (user?.Identity?.IsAuthenticated != true)
+                {
+                    logger.LogWarning("Unauthorized checkout attempt.");
+                    return RedirectToPage("/Login");
+                }
 
-                Order.CustomerId = "58c49479-ec65-4de2-86e7-033c546291aa";
-                Order.UserName = Cart.UserName;
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var userName = user.Identity.Name;
+
+                if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userName))
+                {
+                    logger.LogWarning("User ID or Username not found in claims.");
+                    return RedirectToPage("/Error", new { statusCode = 400, errorMessage = "Invalid user session." });
+                }
+
+                Order.CustomerId = userId;
+                Order.UserName = userName;
                 Order.TotalPrice = Cart.TotalPrice;
 
                 await cartServices.CheckoutCart(new CheckoutCartRequest(Order));
@@ -61,8 +79,7 @@ namespace LiquorSales.Web.Pages
                 logger.LogError(ex, "Unexpected error occurred.");
                 return new RedirectToPageResult("/Error", new { statusCode = 500, errorMessage = "An unexpected error occurred." });
             }
-
-
         }
+
     }
 }
