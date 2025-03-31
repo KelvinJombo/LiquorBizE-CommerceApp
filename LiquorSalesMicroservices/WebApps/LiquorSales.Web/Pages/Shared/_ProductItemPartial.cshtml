@@ -2,7 +2,7 @@
 
 <div class="card">
     <a asp-page="ProductDetail" asp-route-productId="@Model.Id">
-        <img asp-append-version="true" class="card-img-top" src="~/images/product/@Model.ImageFile" alt="">
+        <img asp-append-version="true" class="card-img-top" src="~/uploads/@Model.ImagePath" alt="">
     </a>
     <div class="card-body">
         <h4 class="card-title">

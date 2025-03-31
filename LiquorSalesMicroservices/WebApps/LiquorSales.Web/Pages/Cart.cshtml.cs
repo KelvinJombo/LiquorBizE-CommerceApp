@@ -2,9 +2,15 @@ using LiquorSales.Web.Implementations;
 
 namespace LiquorSales.Web.Pages
 {
-    public class CartModel(ICartServices cartServices, ILoadCartServices services, ILogger<CartModel> logger) : PageModel
+    public class CartModel(ICartServices cartServices, ILoadCartServices services, ILogger<CartModel> logger, IHttpContextAccessor httpContextAccessor) : PageModel
     {
+
+        [BindProperty]
+        public UpdateCartRequest UpdateRequest { get; set; }
+
         public ShoppingCartModel Cart {  get; set; } = new ShoppingCartModel();
+
+
         public async Task<IActionResult> OnGetAsync()
         {
             try
@@ -32,11 +38,18 @@ namespace LiquorSales.Web.Pages
 
             try
             {
+                var token = httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
+                if (string.IsNullOrEmpty(token))
+                {
+                    return Unauthorized(); // User is not authenticated
+                }
+
+
                 Cart = await services.LoadUserCart();
 
                 Cart.Items.RemoveAll(x => x.ProductId == productId);
 
-                await cartServices.StoreCart(new StoreCartRequest(Cart));
+                await cartServices.StoreCart(new StoreCartRequest(Cart), $"Bearer {token}");
 
                 return RedirectToPage();
             }
@@ -53,5 +66,40 @@ namespace LiquorSales.Web.Pages
 
 
         }
+
+
+
+        public async Task<IActionResult> OnPostUpdateQuantityAsync()
+        {
+            try
+            {
+                var token = httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
+                if (string.IsNullOrEmpty(token))
+                {
+                    return Unauthorized();
+                }
+
+                var productId = UpdateRequest.ProductId;
+                var quantity = UpdateRequest.Quantity;
+
+                Cart = await services.LoadUserCart();
+
+                var item = Cart.Items.FirstOrDefault(x => x.ProductId == productId);
+                if (item != null)
+                {
+                    item.Quantity = quantity;
+                    await cartServices.StoreCart(new StoreCartRequest(Cart), $"Bearer {token}");
+                }
+
+                return new JsonResult(new { success = true, newTotalPrice = Cart.TotalPrice });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error updating cart quantity.");
+                return new JsonResult(new { success = false, message = "Error updating cart." });
+            }
+        }
+
+
     }
 }

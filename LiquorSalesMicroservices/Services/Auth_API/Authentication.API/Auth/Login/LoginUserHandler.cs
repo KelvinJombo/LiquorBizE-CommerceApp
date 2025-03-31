@@ -1,7 +1,9 @@
-﻿namespace Authentication.Auth.Login
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Authentication.Auth.Login
 {
     public record LoginUserCommand(string Username, string Email, string Password) : ICommand<LoginUserResult>;
-    public record LoginUserResult(string Token, string UserId);
+    public record LoginUserResult(string Token, string UserId, string CustomerId);
 
 
     public class LoginRequestValidator : AbstractValidator<LoginRequest>
@@ -22,7 +24,7 @@
 
         public async Task<LoginUserResult> Handle(LoginUserCommand command, CancellationToken cancellationToken)
         {
-            var user = await userManager.FindByNameAsync(command.Username);
+            var user = await userManager.FindByEmailAsync(command.Email);
             if (user == null)
             {
                 throw new UnauthorizedAccessException("Invalid login credentials.");
@@ -35,17 +37,18 @@
             }
 
             // Generate JWT token
-            var token = await GenerateJwtToken(user);
-            return new LoginUserResult(token, user.Id);
+            var token = await GenerateJwtToken(user, user.CustomerId);
+            return new LoginUserResult(token, user.Id, user.CustomerId);
         }
 
-        private async Task<string> GenerateJwtToken(User user)
+        private async Task<string> GenerateJwtToken(User user, string customerId)
         {
             var keyBytes = Encoding.UTF8.GetBytes(_jwtOptions.Secret);
 
             var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim("CustomerId", user.CustomerId),
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Email, user.Email)
         };
@@ -62,7 +65,7 @@
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256),
                 Issuer = _jwtOptions.Issuer,
-                Audience = _jwtOptions.Audience
+                Audience = _jwtOptions.Audience,
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

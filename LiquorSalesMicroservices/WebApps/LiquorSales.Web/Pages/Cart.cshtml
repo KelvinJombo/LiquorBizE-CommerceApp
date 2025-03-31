@@ -32,23 +32,30 @@
                             <th> </th>
                         </tr>
                     </thead>
-                    <tbody>
-
+                    <tbody id="cartTableBody">
                         @foreach (var cartItem in Model.Cart.Items)
                         {
-                            <tr>
+                            <tr data-product-id="@cartItem.ProductId">
                                 <td><img src="https://dummyimage.com/50x50/55595c/fff" /></td>
                                 <td>@cartItem.ProductName</td>
                                 <td>In stock</td>
-                                <td><input class="form-control" type="text" value="@cartItem.Quantity" /></td>
-                                <td class="text-right"># @(cartItem.SellingPrice * cartItem.Quantity) </td>
+                                <td>
+                                    <input class="form-control quantity-input"
+                                           type="number"
+                                           value="@cartItem.Quantity"
+                                           min="1"
+                                           data-price="@cartItem.SellingPrice"
+                                           data-product-id="@cartItem.ProductId"
+                                           onchange="updatePrice(this)" />
+                                </td>
                                 <td class="text-right">
-
+                                    <span class="price"># @(cartItem.SellingPrice * cartItem.Quantity)</span>
+                                </td>
+                                <td class="text-right">
                                     <form asp-page-handler="removefromcart" method="post">
                                         <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                                         <input type="hidden" asp-for="@cartItem.ProductId" name="productId" />
                                     </form>
-
                                 </td>
                             </tr>
                         }
@@ -59,7 +66,7 @@
                             <td></td>
                             <td></td>
                             <td><strong>Total</strong></td>
-                            <td class="text-right"><strong># @Model.Cart.TotalPrice </strong></td>
+                            <td class="text-right"><strong id="totalPrice"># @Model.Cart.TotalPrice </strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -67,20 +74,62 @@
         </div>
         <div class="col mb-2">
             <div class="row">
-                <div class="col-sm-12  col-md-6">
-                    @*<button class="btn btn-lg btn-block btn-danger">Continue Shopping</button>*@
+                <div class="col-sm-12 col-md-6">
                     <a asp-page="ProductList" class="btn btn-lg btn-block btn-success">Buy More</a>
                 </div>
                 <div class="col-sm-12 col-md-6 text-right">
-                    @*<button class="btn btn-lg btn-block btn-danger text-uppercase">CheckOut</button>*@
                     <a asp-page="CheckOut"
                        class="btn btn-lg btn-block btn-danger text-uppercase @(Model.Cart.Items.Count == 0 ? "disabled" : "")">
                         CheckOut
                     </a>
-
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function updatePrice(input) {
+            let quantity = parseInt(input.value);
+            if (quantity < 1) {
+                quantity = 1; // Ensure minimum quantity is 1
+                input.value = 1;
+            }
+
+            let pricePerItem = parseFloat(input.dataset.price);
+            let row = input.closest('tr');
+            let priceCell = row.querySelector('.price');
+
+            // Calculate new price
+            let newPrice = pricePerItem * quantity;
+            priceCell.innerHTML = `# ${newPrice.toFixed(2)}`;
+
+            // Update Total Price
+            let totalPrice = 0;
+            document.querySelectorAll('.quantity-input').forEach(qtyInput => {
+                let itemPrice = parseFloat(qtyInput.dataset.price) * parseInt(qtyInput.value);
+                totalPrice += itemPrice;
+            });
+
+            document.getElementById('totalPrice').innerHTML = `# ${totalPrice.toFixed(2)}`;
+
+            // Optional: Send AJAX request to update quantity in backend
+            updateCartQuantity(input.dataset.productId, quantity);
+        }
+
+        function updateCartQuantity(productId, quantity) {
+            fetch('/Cart?handler=UpdateQuantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ productId: productId, quantity: quantity })
+            })
+                .then(response => response.json())
+                .then(data => console.log('Cart updated successfully:', data))
+                .catch(error => console.error('Error updating cart:', error));
+        }
+    </script>
+}

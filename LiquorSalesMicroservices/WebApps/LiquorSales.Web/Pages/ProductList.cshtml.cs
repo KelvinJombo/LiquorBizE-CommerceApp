@@ -1,8 +1,9 @@
 using LiquorSales.Web.Implementations;
+using Microsoft.AspNetCore.Http;
 
 namespace LiquorSales.Web.Pages
 {
-    public class ProductListModel(ICatalogueServices catalogueServices, ICartServices cartServices, ILoadCartServices services, ILogger<ProductListModel> logger) : PageModel
+    public class ProductListModel(ICatalogueServices catalogueServices, ICartServices cartServices, ILoadCartServices services, ILogger<ProductListModel> logger, IHttpContextAccessor httpContextAccessor) : PageModel
     {
         public IEnumerable<string> CategoryList { get; set; } = [];
 
@@ -34,6 +35,13 @@ namespace LiquorSales.Web.Pages
 
         public async Task<IActionResult> OnPostAddToCartAsync(Guid productId)
         {
+
+            var token = httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized(); // User is not authenticated
+            }
+
             logger.LogInformation("Add To Cart Button Clicked");
 
             var productResponse = await catalogueServices.GetProduct(productId);
@@ -49,7 +57,7 @@ namespace LiquorSales.Web.Pages
                 Size = productResponse.Product.Size,
             });
 
-            await cartServices.StoreCart(new StoreCartRequest(cart));
+            await cartServices.StoreCart(new StoreCartRequest(cart), $"Bearer {token}");
 
             return RedirectToPage("Cart");
         }

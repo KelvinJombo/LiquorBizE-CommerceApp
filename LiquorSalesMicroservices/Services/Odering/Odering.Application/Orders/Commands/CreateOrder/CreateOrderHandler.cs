@@ -1,9 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using Odering.Application.Data;
-using Odering.Application.Dtos;
-
-
-namespace Odering.Application.Orders.Commands.CreateOrder
+﻿namespace Odering.Application.Orders.Commands.CreateOrder
 {
     public class CreateOrderHandler(IApplicationDbContext context) : ICommandHandler<CreateOrderCommand, CreateOrderResult>
     {

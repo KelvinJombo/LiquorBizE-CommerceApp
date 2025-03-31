@@ -1,9 +1,10 @@
 using LiquorSales.Web.Implementations;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace LiquorSales.Web.Pages
 {
-    public class CheckoutModel(ICartServices cartServices, ILoadCartServices services, ILogger<CheckoutModel> logger) : PageModel
+    public class CheckoutModel(ICartServices cartServices, ILoadCartServices services, ILogger<CheckoutModel> logger, IHttpContextAccessor httpContextAccessor) : PageModel
     {
         [BindProperty]
         public CartCheckoutModel Order { get; set; } = default!;
@@ -11,6 +12,13 @@ namespace LiquorSales.Web.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
+
+            if (Cart == null)
+            {
+                Cart = new ShoppingCartModel();
+            }
+
+
             try
             {
                 Cart = await services.LoadUserCart();
@@ -37,12 +45,13 @@ namespace LiquorSales.Web.Pages
 
             try
             {
-                Cart = await services.LoadUserCart();
-
-                if (!ModelState.IsValid)
+                var token = httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
+                if (string.IsNullOrEmpty(token))
                 {
-                    return Page();
+                    return Unauthorized();
                 }
+
+                Cart = await services.LoadUserCart();                 
 
                 // Get the logged-in user's details
                 var user = HttpContext.User;
@@ -65,7 +74,7 @@ namespace LiquorSales.Web.Pages
                 Order.UserName = userName;
                 Order.TotalPrice = Cart.TotalPrice;
 
-                await cartServices.CheckoutCart(new CheckoutCartRequest(Order));
+                await cartServices.CheckoutCart(new CheckoutCartRequest(Order), $"Bearer {token}");
 
                 return RedirectToPage("Confirmation", "OrderSubmitted");
             }

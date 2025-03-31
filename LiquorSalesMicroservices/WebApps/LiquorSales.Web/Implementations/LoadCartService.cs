@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Http;
 using System.Net;
 
 namespace LiquorSales.Web.Implementations
@@ -7,7 +8,13 @@ namespace LiquorSales.Web.Implementations
     {
         public async Task<ShoppingCartModel> LoadUserCart()
         {
-            // Get the currently authenticated user's username
+            var token = _httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
+
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+
             var userName = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
             if (string.IsNullOrEmpty(userName))
@@ -19,7 +26,7 @@ namespace LiquorSales.Web.Implementations
 
             try
             {
-                var getCartResponse = await cartServices.GetCart(userName);
+                var getCartResponse = await cartServices.GetCart(userName, $"Bearer {token}");
                 cart = getCartResponse.Cart;
             }
             catch (ApiException apiException) when (apiException.StatusCode == HttpStatusCode.NotFound)
@@ -33,6 +40,7 @@ namespace LiquorSales.Web.Implementations
 
             return cart;
         }
+
 
     }
 }

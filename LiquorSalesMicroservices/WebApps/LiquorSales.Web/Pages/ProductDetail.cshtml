@@ -5,6 +5,7 @@
 }
 
 <div class="container">
+    <!-- Breadcrumb Navigation -->
     <div class="row">
         <div class="col">
             <nav aria-label="breadcrumb">
@@ -16,37 +17,30 @@
             </nav>
         </div>
     </div>
-</div>
 
-<div class="container">
     <div class="row">
-        <div class="col-12 col-lg-6">
+        <!-- Left Section: Product Details -->
+        <div class="col-lg-7">
             <div class="card bg-light mb-3">
-                <div class="card-body">
-                    <a href="" data-toggle="modal" data-target="#productModal">
-                        <img class="img-fluid" src="~/images/product/@Model.Product.ImageFile.Replace('-','x')" />
-                        <p class="text-center">@Model.Product.Name</p>
+                <div class="card-body text-center">
+                    <a href="#" data-toggle="modal" data-target="#productModal">
+                        @if (!string.IsNullOrEmpty(Model.Product?.ImagePath))
+                        {
+                            <img class="img-fluid" src="@Url.Content($"~/uploads/{Model.Product.ImagePath}")" alt="Product Image" />
+                        }
+                        else
+                        {
+                            <p class="text-danger">Image not available</p>
+                        }
                     </a>
+                    <p class="mt-2 font-weight-bold">@Model.Product.Name</p>
                 </div>
             </div>
-        </div>
 
-        @if (User.Identity.IsAuthenticated)
-        {
-            <p class="text-success">✅ You are authenticated & logged in.</p>
-            <p><strong>User Name:</strong> @User.Identity.Name</p>
-        }
-        else
-        {
-            <p class="text-danger">❌ You are NOT authenticated.</p>
-        }
-
-
-        <div class="col-12 col-lg-6 add_to_cart_block">
             <div class="card bg-light mb-3">
                 <div class="card-body">
-                    <p class="price">#@Model.Product.SellingPrice </p>
-                    <p class="price_discounted">#@(Model.Product.SellingPrice + 150) </p>
+                    <p class="price">#@Model.Product.SellingPrice</p>
+                    <p class="price_discounted">#@(Model.Product.SellingPrice + 150)</p>
 
                     @if (HttpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == false)
                     {
@@ -58,7 +52,7 @@
                     }
                     else
                     {
-                        <form asp-page-handler="AddToCart" method="post" name="addToCartForm" id="add_cart_form">
+                        <form asp-page-handler="AddToCart" method="post" id="add_cart_form">
                             <div class="form-group">
                                 <label for="size">Size</label>
                                 <select asp-for="Size" class="custom-select" id="size">
@@ -72,24 +66,47 @@
                                 <label>Quantity :</label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus" data-field="">
+                                        <button type="button" class="quantity-left-minus btn btn-danger btn-number">
                                             <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input asp-for="Quantity" type="text" class="form-control" id="quantity" name="quantity" min="1" max="5000" value="1">
+                                    <input asp-for="Quantity" type="text" class="form-control" id="quantity" min="1" max="5000" value="1">
                                     <div class="input-group-append">
-                                        <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus" data-field="">
+                                        <button type="button" class="quantity-right-plus btn btn-success btn-number">
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <a href="javascript:;" onclick="parentNode.submit();" class="btn btn-success btn-lg btn-block text-uppercase">
+                            <button type="submit" class="btn btn-success btn-lg btn-block text-uppercase">
                                 <i class="fa fa-shopping-cart"></i> Add To Cart
-                            </a>
+                            </button>
                             <input type="hidden" asp-for="@Model.Product.Id" name="productId" />
                         </form>
                     }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section: User Authentication & Management -->
+        <div class="col-lg-5">
+            <div class="card bg-light mb-3">
+                <div class="card-body text-center">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <p class="text-success">✅ You are authenticated & logged in.</p>
+                        <p><strong>User Name:</strong> @User.Identity.Name</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger">❌ You are NOT authenticated.</p>
+                    }
+
+                    <div class="mt-3">
+                        <a asp-page="/Products" class="btn btn-primary btn-lg">
+                            <i class="fa fa-arrow-right"></i> To Products Management
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

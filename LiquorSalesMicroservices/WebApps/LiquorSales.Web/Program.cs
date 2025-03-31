@@ -1,5 +1,4 @@
 using LiquorSales.Web.Implementations;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Polly;
 
 var builder = WebApplication.CreateBuilder(args);

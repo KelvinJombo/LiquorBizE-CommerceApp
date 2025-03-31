@@ -22,7 +22,7 @@
 
         public int TotalQuantity { get; private set; }
         public string Description { get; set; } = default!;
-        public string ImageFile { get; set; } = default!;
+        public string ImagePath { get; set; } = default!;
         public decimal CostPrice { get; set; }
         public decimal SellingPrice { get; set; }
         public DateTime? StockingDate { get; set; } = DateTime.Now;

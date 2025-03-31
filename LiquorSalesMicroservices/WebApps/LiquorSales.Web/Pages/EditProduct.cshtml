@@ -1,0 +1,85 @@
+﻿@page
+@model LiquorSales.Web.Pages.EditProductModel
+@{
+    Layout = "_Layout";
+}
+
+<h2>Edit Product</h2>
+
+@if (!string.IsNullOrEmpty(ViewData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success">@ViewData["SuccessMessage"]</div>
+}
+
+@if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+{
+    <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Product.Id" />
+
+    <div class="form-group">
+        <label asp-for="Product.Name"></label>
+        <input asp-for="Product.Name" class="form-control" />
+        <span asp-validation-for="Product.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.CompanyName"></label>
+        <input asp-for="Product.CompanyName" class="form-control" />
+        <span asp-validation-for="Product.CompanyName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.Size"></label>
+        <input asp-for="Product.Size" class="form-control" />
+        <span asp-validation-for="Product.Size" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoryInput">Categories (comma-separated)</label>
+        <input asp-for="CategoryInput" class="form-control" />
+        <span asp-validation-for="CategoryInput" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.Description"></label>
+        <textarea asp-for="Product.Description" class="form-control"></textarea>
+        <span asp-validation-for="Product.Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.SellingPrice"></label>
+        <input asp-for="Product.SellingPrice" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Product.SellingPrice" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.StockingQuantity"></label>
+        <input asp-for="Product.StockingQuantity" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Product.StockingQuantity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.ExpiryDate"></label>
+        <input asp-for="Product.ExpiryDate" type="date" class="form-control" />
+        <span asp-validation-for="Product.ExpiryDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Current Image</label>
+        @if (!string.IsNullOrEmpty(Model.Product.ImagePath))
+        {
+            <img src="/uploads/@Model.Product.ImagePath" alt="Product Image" width="100" height="100" />
+        }
+    </div>
+
+    <div class="form-group">
+        <label for="imageFile">Upload New Image</label>
+        <input asp-for="ImageFile" type="file" class="form-control" id="imageFile" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Product</button>
+</form>

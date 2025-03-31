@@ -38,24 +38,31 @@
                 <span class="text-muted">Your ShoppingCart</span>
                 <span class="badge badge-secondary badge-pill">@Model.Cart.Items.Count</span>
             </h4>
-            <ul class="list-group mb-3">
+            @if (Model.Cart?.Items != null && Model.Cart.Items.Any())
+            {
+                <ul class="list-group mb-3">
+                    @foreach (var item in Model.Cart.Items)
+                    {
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <div>
+                                <h6 class="my-0">@item.ProductName</h6>
+                                <small class="text-muted">@item.ProductName</small>
+                            </div>
+                            <span class="text-muted">#@item.SellingPrice</span>
+                        </li>
+                    }
 
-                @foreach (var item in Model.Cart.Items)
-                {
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">@item.ProductName</h6>
-                            <small class="text-muted">@item.ProductName</small>
-                        </div>
-                        <span class="text-muted">#@item.SellingPrice</span>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Total (Naira)</span>
+                        <strong>#@(Model.Cart.Items.Sum(i => i.SellingPrice))</strong> <!-- Ensure proper sum -->
                     </li>
-                }
+                </ul>
+            }
+            else
+            {
+                <p>Your cart is empty.</p>
+            }
 
-                <li class="list-group-item d-flex justify-content-between">
-                    <span>Total (Naira)</span>
-                    <strong>#@Model.Cart.TotalPrice</strong>
-                </li>
-            </ul>
 
             <form class="card p-2">
                 <div class="input-group">

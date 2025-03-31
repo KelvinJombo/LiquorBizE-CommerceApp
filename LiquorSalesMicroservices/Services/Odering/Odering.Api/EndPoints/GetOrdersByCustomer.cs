@@ -5,7 +5,7 @@ namespace Odering.Api.EndPoints
 {
     //public record GetOrdersByCustomerRequest(Guid CustomerId);
 
-    public record GetOrdersByCustomerResponse(IEnumerable<OrderDto> Orders);
+    public record GetOrdersByCustomerResponse(List<OrderDto> Orders);
 
     public class GetOrdersByCustomer : ICarterModule
     {

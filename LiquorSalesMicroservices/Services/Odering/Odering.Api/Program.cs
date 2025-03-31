@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Odering.Api;
 using Odering.Application;
 using Odering.Infrastructure;

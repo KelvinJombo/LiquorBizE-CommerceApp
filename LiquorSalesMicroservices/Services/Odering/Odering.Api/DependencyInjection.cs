@@ -13,8 +13,12 @@ namespace Odering.Api
         {
             services.AddCarter();
             services.AddExceptionHandler<CustomExceptionHandler>();
-            services.AddHealthChecks()
-                .AddSqlServer(configuration.GetConnectionString("Database")!);
+
+            var dbConnection = configuration.GetConnectionString("Database");
+            if (!string.IsNullOrEmpty(dbConnection))
+            {
+                services.AddHealthChecks().AddSqlServer(dbConnection);
+            }
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -23,51 +27,41 @@ namespace Odering.Api
                 options.Audience = configuration["Auth0:Audience"];
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
                     ValidIssuer = $"https://{configuration["Auth0:Domain"]}",
                     ValidateAudience = true,
                     ValidAudience = configuration["Auth0:Audience"],
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
-                options.RequireHttpsMetadata = true;
-
+                options.RequireHttpsMetadata = !configuration.GetValue<bool>("DisableHttps");
             });
-
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("RegularUserPolicy", policy =>
-                    policy.RequireRole("RegularUser"));
-
-                options.AddPolicy("AdminUserPolicy", policy =>
-                    policy.RequireRole("AdminUser"));
-
-                options.AddPolicy("SuperAdminPolicy", policy =>
-                    policy.RequireRole("SuperAdminUser"));
-
-                options.AddPolicy("AdminOrSuperAdminPolicy", policy =>
-                    policy.RequireRole("AdminUser", "SuperAdminUser"));
-                options.AddPolicy("CustomPolicy", policy =>
-                    policy.RequireClaim("custom-claim", "value"));
+                options.AddPolicy("RegularUserPolicy", policy => policy.RequireRole("RegularUser"));
+                options.AddPolicy("AdminUserPolicy", policy => policy.RequireRole("AdminUser"));
+                options.AddPolicy("SuperAdminPolicy", policy => policy.RequireRole("SuperAdminUser"));
+                options.AddPolicy("AdminOrSuperAdminPolicy", policy => policy.RequireRole("AdminUser", "SuperAdminUser"));
+                options.AddPolicy("CustomPolicy", policy => policy.RequireClaim("custom-claim", "value"));
             });
-
-
 
             return services;
         }
 
-
         public static WebApplication UseApiServices(this WebApplication app)
         {
             app.MapCarter();
-            app.UseExceptionHandler(options => { });
+            app.UseExceptionHandler("/error");
+
             app.UseHealthChecks("/health",
                 new HealthCheckOptions
                 {
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
+
             return app;
         }
-
     }
 }

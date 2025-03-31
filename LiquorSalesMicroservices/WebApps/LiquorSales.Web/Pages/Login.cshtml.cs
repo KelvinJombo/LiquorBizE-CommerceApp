@@ -70,20 +70,20 @@ namespace LiquorSales.Web.Pages
                     var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, LoginRequest.Email),
-                new Claim(ClaimTypes.NameIdentifier, response.UserId),  
-                new Claim("Token", response.Token)  
+                new Claim(ClaimTypes.NameIdentifier, response.UserId),
+                new Claim("Token", response.Token),
+                new Claim("CustomerId", response.CustomerId)  
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var authProperties = new AuthenticationProperties
                     {
-                        IsPersistent = true // Keep the user signed in across requests
+                        IsPersistent = true
                     };
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), authProperties);
 
-                    // Store token in cookie
                     Response.Cookies.Append("AuthToken", response.Token, new CookieOptions
                     {
                         HttpOnly = true,
@@ -91,13 +91,12 @@ namespace LiquorSales.Web.Pages
                         SameSite = SameSiteMode.Strict
                     });
 
-                    // Ensure returnUrl is not empty and is local to avoid open redirects
                     if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
 
-                    return RedirectToPage("/Index"); // Default redirect if no returnUrl
+                    return RedirectToPage("/Index");
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -112,6 +111,7 @@ namespace LiquorSales.Web.Pages
 
             return Page();
         }
+
 
 
 

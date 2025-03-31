@@ -1,4 +1,6 @@
-﻿namespace LiquorSales.Web.Models.ShoppingCart
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace LiquorSales.Web.Models.ShoppingCart
 {
     public class ShoppingCartModel
     {
@@ -17,6 +19,17 @@
         public Guid ProductId { get; set; } = default!;
         public string ProductName { get; set; } = default!;
     }
+
+
+    public class UpdateCartRequest
+    {
+        [Required]
+        public Guid ProductId { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1.")]
+        public int Quantity { get; set; }
+    }
+
 
 
     public record GetCartResponse(ShoppingCartModel Cart);

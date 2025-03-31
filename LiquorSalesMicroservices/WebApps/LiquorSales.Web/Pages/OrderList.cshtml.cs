@@ -1,27 +1,31 @@
-using System.Security.Claims;
-
 namespace LiquorSales.Web.Pages
 {
-    public class OrderListModel(IOrderingService orderingService) : PageModel
+    public class OrderListModel(IOrderingService orderingService, IHttpContextAccessor httpContextAccessor) : PageModel
     {
-        public IEnumerable<OrderModel> Orders { get; set; } = default!;
+        public List<OrderModel> Orders { get; set; } = new();
 
         public async Task<IActionResult> OnGet()
         {
-            // Get the logged-in user's CustomerId from claims
-            var customerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var token = httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized();
+            }
+             
+            var claims = httpContextAccessor.HttpContext?.User.Claims;             
+
+            var customerIdClaim = httpContextAccessor.HttpContext?.User.FindFirst("CustomerId")?.Value;
 
             if (string.IsNullOrEmpty(customerIdClaim) || !Guid.TryParse(customerIdClaim, out var customerId))
             {
-                return Unauthorized(); // Return 401 if the user is not authenticated or CustomerId is invalid
+                return Unauthorized();  
             }
 
-            var response = await orderingService.GetOrdersByCustomer(customerId);
-
-            Orders = response.Orders;
+            var response = await orderingService.GetOrdersByCustomer(customerId, $"Bearer {token}");
+            Orders = response?.Orders ?? new List<OrderModel>();
 
             return Page();
         }
-
     }
+
 }
