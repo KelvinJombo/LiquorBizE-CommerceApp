@@ -1,6 +1,6 @@
 ﻿namespace LiquorSales.Web.Models.Catalogue
 {
-    public class ProductModel
+    public class ProductModel 
     {
         private int _stockingQuantity;
 

@@ -16,7 +16,9 @@ namespace LiquorSales.Web.Services
         [Post("/cart-service/cart/checkout")]
         Task<CheckoutCartResponse> CheckoutCart(CheckoutCartRequest request, [Header("Authorization")] string authorization);
 
-       
-        
+        [Put("/cart-service/cart")]
+        Task<UpdateCartResponse> UpdateCart([Body] UpdateCartRequest request, [Header("Authorization")] string authorization);
+
+
     }
 }

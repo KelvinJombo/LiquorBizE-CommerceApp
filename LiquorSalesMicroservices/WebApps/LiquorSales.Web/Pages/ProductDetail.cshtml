@@ -39,8 +39,7 @@
 
             <div class="card bg-light mb-3">
                 <div class="card-body">
-                    <p class="price">#@Model.Product.SellingPrice</p>
-                    <p class="price_discounted">#@(Model.Product.SellingPrice + 150)</p>
+                    <p class="price">#@Model.Product.SellingPrice</p>                    
 
                     @if (HttpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == false)
                     {

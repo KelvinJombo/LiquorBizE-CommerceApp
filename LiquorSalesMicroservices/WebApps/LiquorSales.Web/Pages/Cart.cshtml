@@ -101,6 +101,9 @@
             let row = input.closest('tr');
             let priceCell = row.querySelector('.price');
 
+            console.log("Quantity:", quantity);
+            console.log("Price per item:", input.dataset.price);
+
             // Calculate new price
             let newPrice = pricePerItem * quantity;
             priceCell.innerHTML = `# ${newPrice.toFixed(2)}`;

@@ -15,6 +15,15 @@
             await session.SaveChangesAsync(cancellationToken);
             return cart;
         }
+
+        public async Task<ShoppingCarts> UpdateCart(ShoppingCarts cart, CancellationToken cancellationToken = default)
+        {
+            session.Update(cart);
+            await session.SaveChangesAsync(cancellationToken);
+            return cart;
+        }
+
+
         public async Task<bool> DeleteCart(string userName, CancellationToken cancellationToken = default)
         {
             var cart = await session.LoadAsync<ShoppingCarts>(userName, cancellationToken);

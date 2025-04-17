@@ -1,9 +1,8 @@
 using LiquorSales.Web.Implementations;
-using Microsoft.AspNetCore.Http;
 
 namespace LiquorSales.Web.Pages
 {
-    public class ProductListModel(ICatalogueServices catalogueServices, ICartServices cartServices, ILoadCartServices services, ILogger<ProductListModel> logger, IHttpContextAccessor httpContextAccessor) : PageModel
+    public class ProductListModel(ICatalogueServices catalogueServices, ILoadCartServices services, ILogger<ProductListModel> logger, IHttpContextAccessor httpContextAccessor) : PageModel
     {
         public IEnumerable<string> CategoryList { get; set; } = [];
 
@@ -35,32 +34,38 @@ namespace LiquorSales.Web.Pages
 
         public async Task<IActionResult> OnPostAddToCartAsync(Guid productId)
         {
-
-            var token = httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
-            if (string.IsNullOrEmpty(token))
+            try
             {
-                return Unauthorized(); // User is not authenticated
+                var token = httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
+                if (string.IsNullOrEmpty(token))
+                {
+                    return Unauthorized();
+                }
+
+                logger.LogInformation("Add To Cart Button Clicked");
+
+                var productResponse = await catalogueServices.GetProduct(productId);
+                var product = productResponse.Product;
+
+                await services.AddToCart(
+                    product.Id,
+                    product.Name,
+                    product.SellingPrice,
+                    1,
+                    product.Size,
+                    product.Category);
+
+                return RedirectToPage("Cart");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to add product to cart");
+                return RedirectToPage("Error");
             }
 
-            logger.LogInformation("Add To Cart Button Clicked");
-
-            var productResponse = await catalogueServices.GetProduct(productId);
-
-            var cart = await services.LoadUserCart();
-
-            cart.Items.Add(new ShoppingCartItemModel
-            {
-                ProductId = productId,
-                ProductName = productResponse.Product.Name,
-                SellingPrice = productResponse.Product.SellingPrice,
-                Quantity = 1,
-                Size = productResponse.Product.Size,
-            });
-
-            await cartServices.StoreCart(new StoreCartRequest(cart), $"Bearer {token}");
-
-            return RedirectToPage("Cart");
         }
+
+
 
     }
 }

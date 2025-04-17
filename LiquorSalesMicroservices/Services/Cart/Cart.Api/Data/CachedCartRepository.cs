@@ -27,6 +27,16 @@ namespace Cart.Api.Data
             return cart;
         }
 
+
+        public async Task<ShoppingCarts> UpdateCart(ShoppingCarts cart, CancellationToken cancellationToken = default)
+        {
+            await cartRepository.UpdateCart(cart, cancellationToken);
+            await cache.SetStringAsync(cart.UserName, JsonSerializer.Serialize(cart), cancellationToken);
+            return cart;
+        }
+
+
+
         public async Task<bool> DeleteCart(string userName, CancellationToken cancellationToken = default)
         {
               await cartRepository.DeleteCart(userName, cancellationToken);
